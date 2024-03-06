@@ -6,6 +6,7 @@ class WasteCollectionCenter(models.Model):
     friendly_id = models.CharField(max_length=50, unique=True)
     fill_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     pickup_fill_percentage_threshold = models.DecimalField(max_digits=5, decimal_places=2, default=80)
+    pickup_requested = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.friendly_id} - {self.fill_percentage}% Full"
@@ -22,9 +23,13 @@ class WasteCollectionCenter(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        super().save(*args, **kwargs)
         if self.fill_percentage > self.pickup_fill_percentage_threshold:
-            PickupRequest.objects.create(collection_center=self)
+            if not self.pickup_requested:
+                PickupRequest.objects.create(collection_center=self)
+                self.pickup_requested = True
+        else:
+            self.pickup_requested = False
+        super().save(*args, **kwargs)
 
 
 class FillPercentageChange(models.Model):
