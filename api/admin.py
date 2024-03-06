@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import WasteCollectionCenter, FillPercentageChange, PickupRequest
 
-# Register your models here.
+admin.site.register(WasteCollectionCenter)
+admin.site.register(FillPercentageChange)
+admin.site.register(PickupRequest)
+
