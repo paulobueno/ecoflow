@@ -42,6 +42,7 @@ class FillPercentageChange(models.Model):
 
     class Meta:
         verbose_name_plural = "Fill Percentage History"
+        ordering = ['modification_date']
 
     def save(self, *args, **kwargs):
         self.collection_center.fill_percentage = self.fill_percentage
