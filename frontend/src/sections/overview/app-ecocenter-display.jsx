@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import AppWidgetButton from './app-widget-button';
 import AppWebsiteVisits from './app-website-visits';
 import AppWidgetSummary from './app-widget-summary';
+import AppWidgetCallButton from './app-widget-call-button';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +51,7 @@ export default function AppEcoCenterDisplay({ center, ...other }) {
             title="volume ocupado"
             total={`${parseFloat(centerState.fill_percentage)}%`}
             color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+            icon={<img alt="icon" src="/assets/icons/recyclingbin.png" />}
           />
         </Grid>
 
@@ -58,6 +59,14 @@ export default function AppEcoCenterDisplay({ center, ...other }) {
           <AppWidgetButton
             inputText="volume ocupado % "
             centerId={centerState.id}
+            onClick={fetchDataFromAPIs}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetCallButton
+            centerId={centerState.id}
+            pickupRequested={centerState.pickup_requested}
             onClick={fetchDataFromAPIs}
           />
         </Grid>
