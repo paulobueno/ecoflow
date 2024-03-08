@@ -12,16 +12,19 @@ import AppWidgetSummary from './app-widget-summary';
 // ----------------------------------------------------------------------
 
 export default function AppEcoCenterDisplay({ center, ...other }) {
-  const [fillPercentageHistory, setFillPercentageHistory] = useState([]);
+  const [historicalData, setHistoricalData] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/fill-percentage-history/${center.id}`)
-      .then(response => response.json())
-      .then(data => {
-        setFillPercentageHistory(data);
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    fetchHistoricalData(center.id);
   }, [center.id]);
+
+  const fetchHistoricalData = centerId => {
+    fetch(`http://localhost:8000/api/fill-percentage-history/${centerId}`)
+      .then(response => response.json())
+      .then(data => setHistoricalData(data))
+      .catch(error => console.error('Error fetching data:', error));
+
+  };
 
   return (
     <Container maxWidth="xl" sx={{ marginTop: 5 }}>
@@ -42,7 +45,8 @@ export default function AppEcoCenterDisplay({ center, ...other }) {
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetButton
             inputText="novo volume %"
-            centerid={center.id}
+            centerId={center.id}
+            onClick={fetchHistoricalData}
           />
         </Grid>
 
@@ -50,7 +54,7 @@ export default function AppEcoCenterDisplay({ center, ...other }) {
           <AppWebsiteVisits
             title="Histórico"
 //             subheader="(+43%) than last year"
-            history={fillPercentageHistory}
+            history={historicalData}
             centerid={center.id}
             threshold={center.pickup_fill_percentage_threshold}
           />

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -9,24 +9,14 @@ import Chart, { useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
-export default function AppWebsiteVisits({ title, subheader, chart, centerid, history, threshold, ...other }) {
-  const [fillPercentageHistory, setFillPercentageHistory] = useState([]);
+export default function AppWebsiteVisits({ title, subheader, chart, history, threshold, ...other }) {
 
-  useEffect(() => {
-    fetch(`http://localhost:8000/api/fill-percentage-history/${centerid}`)
-      .then(response => response.json())
-      .then(data => {
-        setFillPercentageHistory(data);
-      })
-      .catch(error => console.error('Error fetching data:', error));
-  }, [centerid]);
-
-  const labels = fillPercentageHistory.map(item => {
+  const labels = history.map(item => {
       const dateObject = new Date(item.modification_date);
       const formattedDate = new Intl.DateTimeFormat('en-GB').format(dateObject);
       return formattedDate;
 });
-  const datapoints = fillPercentageHistory.map(item => parseFloat(item.fill_percentage));
+  const datapoints = history.map(item => parseFloat(item.fill_percentage));
   const series = [
   {
     name: 'Total preenchido',
@@ -95,7 +85,6 @@ AppWebsiteVisits.propTypes = {
   chart: PropTypes.object,
   history: PropTypes.object,
   subheader: PropTypes.string,
-  centerid: PropTypes.number,
   threshold: PropTypes.number,
   title: PropTypes.string,
 };
