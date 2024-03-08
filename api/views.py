@@ -16,7 +16,7 @@ class WasteCollectionCenterViewSet(viewsets.ModelViewSet):
         if center_id:
             return WasteCollectionCenter.objects.filter(id=center_id)
         else:
-            return self.queryset
+            return WasteCollectionCenter.objects.all()
 
 
 @permission_classes([AllowAny])
