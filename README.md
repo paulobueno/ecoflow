@@ -1,5 +1,6 @@
 # ecoflow
 
+![Alt Text](b2blue-app.png)
 
 ## Setting up the backend
 
@@ -34,6 +35,6 @@ yarn dev
 http://localhost:3030/
 
 ## Accessing django admin
-http;//localhost:8000/admin
+http://localhost:8000/admin
 user: root
 pass: abcde
