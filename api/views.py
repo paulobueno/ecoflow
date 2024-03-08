@@ -6,12 +6,17 @@ from .models import WasteCollectionCenter, FillPercentageChange
 from .serializers import WasteCollectionCenterSerializer, FillPercentageChangeSerializer
 
 
-
 @permission_classes([AllowAny])
 class WasteCollectionCenterViewSet(viewsets.ModelViewSet):
     queryset = WasteCollectionCenter.objects.all()
     serializer_class = WasteCollectionCenterSerializer
 
+    def get_queryset(self):
+        center_id = self.kwargs.get('center_id')
+        if center_id:
+            return WasteCollectionCenter.objects.filter(id=center_id)
+        else:
+            return self.queryset
 
 
 @permission_classes([AllowAny])
