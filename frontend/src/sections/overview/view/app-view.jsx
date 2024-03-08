@@ -10,9 +10,7 @@ export default function AppView() {
   useEffect(() => {
     fetch('http://localhost:8000/api/waste-collection-centers/')
       .then(response => response.json())
-      .then(data => {
-        setCollectionCenters(data);
-      })
+      .then(data => setCollectionCenters(data))
       .catch(error => console.error('Error fetching data:', error));
   }, []);
 

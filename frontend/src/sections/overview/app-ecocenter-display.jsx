@@ -17,9 +17,7 @@ export default function AppEcoCenterDisplay({ center, ...other }) {
   useEffect(() => {
     fetch(`http://localhost:8000/api/fill-percentage-history/${center.id}`)
       .then(response => response.json())
-      .then(data => {
-        setFillPercentageHistory(data);
-      })
+      .then(data => setFillPercentageHistory(data))
       .catch(error => console.error('Error fetching data:', error));
   }, [center.id]);
 
