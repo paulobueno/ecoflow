@@ -13,30 +13,42 @@ import AppWidgetSummary from './app-widget-summary';
 
 export default function AppEcoCenterDisplay({ center, ...other }) {
   const [historicalData, setHistoricalData] = useState([]);
+  const [centerState, setCenterState] = useState(center);
 
   useEffect(() => {
-    fetchHistoricalData(center.id);
-  }, [center.id]);
+    fetchHistoricalData(centerState.id);
+  }, [centerState.id]);
 
   const fetchHistoricalData = centerId => {
     fetch(`http://localhost:8000/api/fill-percentage-history/${centerId}`)
       .then(response => response.json())
       .then(data => setHistoricalData(data))
       .catch(error => console.error('Error fetching data:', error));
+  };
 
+  const fetchData = centerId => {
+    fetch(`http://localhost:8000/api/waste-collection-centers/${centerId}`)
+      .then(response => response.json())
+      .then(data => setCenterState(data))
+      .catch(error => console.error('Error fetching data:', error));
+  };
+
+  const fetchDataFromAPIs = centerId => {
+    fetchHistoricalData(centerId);
+    fetchData(centerId);
   };
 
   return (
     <Container maxWidth="xl" sx={{ marginTop: 5 }}>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        {center.friendly_id}
+        {centerState.friendly_id}
       </Typography>
 
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
             title="volume ocupado"
-            total={`${parseFloat(center.fill_percentage)}%`}
+            total={`${parseFloat(centerState.fill_percentage)}%`}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
           />
@@ -44,9 +56,9 @@ export default function AppEcoCenterDisplay({ center, ...other }) {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetButton
-            inputText="novo volume %"
-            centerId={center.id}
-            onClick={fetchHistoricalData}
+            inputText="volume ocupado % "
+            centerId={centerState.id}
+            onClick={fetchDataFromAPIs}
           />
         </Grid>
 
@@ -55,8 +67,8 @@ export default function AppEcoCenterDisplay({ center, ...other }) {
             title="Histórico"
 //             subheader="(+43%) than last year"
             history={historicalData}
-            centerid={center.id}
-            threshold={center.pickup_fill_percentage_threshold}
+            centerid={centerState.id}
+            threshold={parseFloat(centerState.pickup_fill_percentage_threshold)}
           />
         </Grid>
       </Grid>
@@ -69,6 +81,5 @@ AppEcoCenterDisplay.propTypes = {
   center: PropTypes.object,
   subheader: PropTypes.string,
   centerid: PropTypes.number,
-  threshold: PropTypes.number,
   title: PropTypes.string,
 };
