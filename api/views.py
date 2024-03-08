@@ -33,7 +33,7 @@ class FillPercentageChangeViewSet(viewsets.ModelViewSet):
 
         fill_percentage = request.data.get('fill_percentage')
 
-        if not fill_percentage:
+        if fill_percentage is None:
             return Response({'error': 'fill_percentage is required'}, status=status.HTTP_400_BAD_REQUEST)
 
         fill_percentage_change = FillPercentageChange.objects.create(
