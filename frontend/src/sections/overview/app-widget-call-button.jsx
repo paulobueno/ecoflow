@@ -46,7 +46,9 @@ export default function AppWidgetCallButton({centerId, pickupRequested, onClick,
 
 
 
-      <Button variant="contained" onClick={handleButtonClick}>Coleta Realizada</Button>
+      <Button variant="contained"
+              onClick={handleButtonClick}
+              disabled={!pickupRequested}>Coleta Realizada</Button>
     </Card>
   );
 }
