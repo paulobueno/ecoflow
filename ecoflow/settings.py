@@ -28,10 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:3030",
 ]
 
-# Application definition
+CORS_ALLOW_ALL_ORIGINS = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [

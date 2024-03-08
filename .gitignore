@@ -160,6 +160,8 @@ cython_debug/
 #.idea/
 
 
+/frontend/node_modules/
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -183,3 +185,4 @@ react-views/build
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
