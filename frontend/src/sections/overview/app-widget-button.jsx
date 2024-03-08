@@ -9,26 +9,30 @@ import TextField from '@mui/material/TextField';
 
 // ----------------------------------------------------------------------
 
-export default function AppWidgetButton({ inputText, centerid, sx, ...other }) {
+export default function AppWidgetButton({ inputText, centerId, onClick, sx, ...other }) {
   const [fillPercentage, setFillPercentage] = useState('');
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     const postData = {
       fill_percentage: parseFloat(fillPercentage),
     };
 
-    fetch(`http://localhost:8000/api/fill-percentage-history/${centerid}/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postData),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('POST response:', data);
-      })
-      .catch(error => console.error('Error posting data:', error));
+    try {
+      const response = await fetch(`http://localhost:8000/api/fill-percentage-history/${centerId}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      const data = await response.json();
+      console.log('POST response:', data);
+
+      await onClick(centerId);
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
   };
 
   return (
@@ -57,6 +61,7 @@ AppWidgetButton.propTypes = {
   icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   sx: PropTypes.object,
   inputText: PropTypes.string,
-  centerid: PropTypes.number,
+  onClick: PropTypes.func,
+  centerId: PropTypes.number,
   total: PropTypes.number,
 };
