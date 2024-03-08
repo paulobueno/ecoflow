@@ -1,6 +1,5 @@
-// import React, { useState, useEffect } from 'react';
-
 import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,11 +9,40 @@ import Chart, { useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
-export default function AppWebsiteVisits({ title, subheader, chart, ...other }) {
-  const { labels, colors, series, options } = chart;
+export default function AppWebsiteVisits({ title, subheader, chart, centerid, history, threshold, ...other }) {
+  const [fillPercentageHistory, setFillPercentageHistory] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/fill-percentage-history/${centerid}`)
+      .then(response => response.json())
+      .then(data => {
+        setFillPercentageHistory(data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, [centerid]);
+
+  const labels = fillPercentageHistory.map(item => {
+      const dateObject = new Date(item.modification_date);
+      const formattedDate = new Intl.DateTimeFormat('en-GB').format(dateObject);
+      return formattedDate;
+});
+  const datapoints = fillPercentageHistory.map(item => parseFloat(item.fill_percentage));
+  const series = [
+  {
+    name: 'Total preenchido',
+    type: 'column',
+    fill: 'solid',
+    data: datapoints,
+  },
+  {
+    name: 'Chamada Automática de Coleta',
+    type: 'line',
+    fill: 'solid',
+    data: Array(datapoints.length).fill(threshold),
+  },
+];
 
   const chartOptions = useChart({
-    colors,
     plotOptions: {
       bar: {
         columnWidth: '20%',
@@ -25,7 +53,11 @@ export default function AppWebsiteVisits({ title, subheader, chart, ...other }) 
     },
     labels,
     xaxis: {
-      type: 'datetime',
+      type: 'category',
+    },
+    yaxis: {
+      min: 0,
+      max: 100
     },
     tooltip: {
       shared: true,
@@ -33,13 +65,12 @@ export default function AppWebsiteVisits({ title, subheader, chart, ...other }) 
       y: {
         formatter: (value) => {
           if (typeof value !== 'undefined') {
-            return `${value.toFixed(0)} visits`;
+            return `${value.toFixed(0)}%`;
           }
           return value;
         },
       },
     },
-    ...options,
   });
 
   return (
@@ -62,6 +93,9 @@ export default function AppWebsiteVisits({ title, subheader, chart, ...other }) 
 
 AppWebsiteVisits.propTypes = {
   chart: PropTypes.object,
+  history: PropTypes.object,
   subheader: PropTypes.string,
+  centerid: PropTypes.number,
+  threshold: PropTypes.number,
   title: PropTypes.string,
 };
